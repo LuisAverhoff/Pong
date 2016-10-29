@@ -104,27 +104,8 @@ void Game::renderObjects(Graphics &graphics)
 {
 	std::string playerScoreStr = std::to_string(playerScore);
 	std::string AIScoreStr = std::to_string(AIScore);
-	
-	int xPlayerPos = (int)playerPaddle->PADDLE_X_POSITION;
-	int yPlayerPos = (int)playerPaddle->getYPosition();
 
-	int xAIPos = (int)AIPaddle->PADDLE_X_POSITION;
-	int yAIPos = (int)AIPaddle->getYPosition();
-
-	int playerPaddleWidth = playerPaddle->PADDLE_WIDTH;
-	int playerPaddleHeight = playerPaddle->PADDLE_HEIGHT;
-
-	int AIPaddleWidth = AIPaddle->PADDLE_WIDTH;
-	int AIPaddleHeight = AIPaddle->PADDLE_HEIGHT;
-
-	SDL_Rect playerRect = { xPlayerPos, yPlayerPos, playerPaddleWidth, playerPaddleHeight };
-	SDL_Rect AIRect = { xAIPos, yAIPos, AIPaddleWidth, AIPaddleHeight };
-
-	Sint16 ballCenterX = (Sint16)ball->getCenterX();
-	Sint16 ballCenterY = (Sint16)ball->getCenterY();
-	Sint16 ballRadius = (Sint16)ball->RADIUS;
-
-	graphics.drawToScreen(&playerRect, &AIRect, ballCenterX, ballCenterY, ballRadius, playerScoreStr, AIScoreStr);
+	graphics.drawToScreen(playerPaddle.get(), AIPaddle.get(), ball.get(), playerScoreStr, AIScoreStr);
 }
 
 void Game::quitGame()
