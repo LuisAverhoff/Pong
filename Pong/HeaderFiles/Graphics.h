@@ -7,8 +7,10 @@
 #define GRAPHICS_H
 
 #include <memory>
-#include <string>
 #include <SDL.h>
+#include "Paddle.h"
+#include "Ball.h"
+#include <string>
 
 namespace SDL2Graphics
 {
@@ -28,7 +30,7 @@ class Graphics
 {
 	public:
 		Graphics(const int, const int);
-		void drawToScreen(SDL_Rect *, SDL_Rect *, Sint16, Sint16, Sint16, std::string, std::string);
+		void drawToScreen(Paddle *, Paddle *, Ball *, std::string, std::string);
 		SDL_Window *getWindowScreen();
 
 	private:
