@@ -1,7 +1,6 @@
 #include "Graphics.h"
 #include <SDL2_gfxPrimitives.h>
 #include <SDL_ttf.h>
-#include <string>
 
 Graphics::Graphics(const int WIDTH, const int HEIGHT) : SCREEN_WIDTH(WIDTH), SCREEN_HEIGHT(HEIGHT)
 {
@@ -43,9 +42,17 @@ void Graphics::drawToScreen(SDL_Rect *playerRect, SDL_Rect *AIRect, Sint16 ballC
 	drawHorizontalBoxes();
 	drawVerticalLine();
 	drawScore(playerScoreText.c_str(), AIScoreText.c_str());
-	SDL_RenderFillRect(renderer.get(), playerRect);
-	SDL_RenderFillRect(renderer.get(), AIRect);
-	filledCircleRGBA(renderer.get(), ballCenterX, ballCenterY, ballRadius, 255, 255, 255, 255);
+	Sint16 playPaddleXPos1 = (Sint16)playerPaddle->PADDLE_X_POSITION;
+	Sint16 playPaddleXPos2 = playPaddleXPos1 + playerPaddle->PADDLE_WIDTH;
+	Sint16 playPaddleYPos1 = (Sint16)playerPaddle->getYPosition();
+	Sint16 playPaddleYPos2 = playPaddleYPos1 + playerPaddle->PADDLE_HEIGHT;
+	boxRGBA(renderer.get(), playPaddleXPos1, playPaddleYPos1, playPaddleXPos2, playPaddleYPos2, 255, 255, 255, 255);
+	Sint16 AIPaddleXPos1 = (Sint16)AIPaddle->PADDLE_X_POSITION;
+	Sint16 AIPaddleXPos2 = AIPaddleXPos1 + AIPaddle->PADDLE_WIDTH;
+	Sint16 AIPaddleYPos1 = (Sint16)AIPaddle->getYPosition();
+	Sint16 AIPaddleYPos2 = AIPaddleYPos1 + AIPaddle->PADDLE_HEIGHT;
+	boxRGBA(renderer.get(), AIPaddleXPos1, AIPaddleYPos1, AIPaddleXPos2, AIPaddleYPos2, 255, 255, 255, 255);
+	filledCircleRGBA(renderer.get(), (Sint16)ball->getCenterX(), (Sint16)ball->getCenterY(), (Sint16)ball->RADIUS, 255, 255, 255, 255);
 	SDL_RenderPresent(renderer.get());
 }
 
