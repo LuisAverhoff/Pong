@@ -18,6 +18,8 @@ class Input
 		bool isKeyPressed(SDL_Scancode);
 		bool isKeyReleased(SDL_Scancode);
 		bool isKeyHeld(SDL_Scancode);
+		bool isPaddleMovingUp();
+		bool isPaddleMovingDown();
 
 	private:
 		std::map<SDL_Scancode, bool> keysHeld;

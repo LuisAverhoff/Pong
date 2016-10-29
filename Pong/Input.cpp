@@ -36,3 +36,22 @@ bool Input::isKeyHeld(SDL_Scancode key)
 	return keysHeld[key];
 }
 
+bool Input::isPaddleMovingUp()
+{
+	if ((isKeyHeld(SDL_SCANCODE_W) || isKeyHeld(SDL_SCANCODE_UP)))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool Input::isPaddleMovingDown()
+{
+	if ((isKeyHeld(SDL_SCANCODE_S) || isKeyHeld(SDL_SCANCODE_DOWN)))
+	{
+		return true;
+	}
+
+	return false;
+}

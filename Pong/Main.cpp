@@ -7,6 +7,7 @@
 int main(int argc, char *agv[])
 {
 	Game game;
-
+	game.playGame();
+	game.quitGame();
 	return 0;
 }
