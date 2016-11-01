@@ -1,8 +1,8 @@
 #ifndef BALL_H
 #define BALL_H
 
-#include "Sound.h"
-#include "Paddle.h"
+class Paddle;
+class Sound;
 
 class Ball
 {
@@ -10,7 +10,7 @@ class Ball
 		Ball(float, float, const float);
 		void launchBall();
 		bool isBallLaunched();
-		void move(float);
+		void move(float, float);
 		void checkForCollision(float, Paddle *, Paddle *, Sound &, const int, const int);
 		bool ballWallCollision(const int);
 		bool ballPaddleCollision(Paddle *);
@@ -19,6 +19,8 @@ class Ball
 		void resetBall(const int, const int);
 		float getCenterX() const;
 		float getCenterY() const;
+		float getVelocityX() const;
+		float getVelocityY() const;
 
 	private:
 		float centerX, centerY;
@@ -31,4 +33,3 @@ class Ball
 };
 
 #endif 
-
