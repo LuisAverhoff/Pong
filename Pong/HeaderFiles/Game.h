@@ -7,13 +7,16 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <SDL.h>
+#include <memory>
 #include "Paddle.h"
 #include "Ball.h"
-#include "Input.h"
-#include "Graphics.h"
-#include "Sound.h"
-#include "Timer.h"
+
+class Input;
+class Graphics;
+class Sound;
+class Timer;
+
+union SDL_Event;
 
 class Game
 {
