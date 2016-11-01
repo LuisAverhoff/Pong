@@ -23,9 +23,9 @@ void Game::playGame()
 	SDL_DisplayMode currentDisplaySize;
 	SDL_GetCurrentDisplayMode(0, &currentDisplaySize);
 
-	playerPaddle = (std::make_unique<Paddle>(20.0f, currentDisplaySize.h / 2.0f - 50.0f, 10, 100));
-	AIPaddle = (std::make_unique<Paddle>(currentDisplaySize.w - 30.0f, currentDisplaySize.h / 2.0f - 50.0f, 10, 100));
-	ball = (std::make_unique<Ball>(currentDisplaySize.w / 2.0f, currentDisplaySize.h / 2.0f, 13.0f));
+	playerPaddle = (std::make_unique<Paddle>(20.0f, currentDisplaySize.h / 2.0f - 40.0f, 10, 80));
+	AIPaddle = (std::make_unique<Paddle>(currentDisplaySize.w - 30.0f, currentDisplaySize.h / 2.0f - 40.0f, 10, 80));
+	ball = (std::make_unique<Ball>(currentDisplaySize.w / 2.0f, currentDisplaySize.h / 2.0f, 10.0f));
 
 	Graphics graphics(currentDisplaySize.w, currentDisplaySize.h);
 	Input input;
