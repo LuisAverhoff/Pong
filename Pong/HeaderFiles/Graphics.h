@@ -8,9 +8,9 @@
 
 #include <memory>
 #include <SDL.h>
-#include "Paddle.h"
-#include "Ball.h"
-#include <string>
+
+class Ball;
+class Paddle;
 
 namespace SDL2Graphics
 {
@@ -30,7 +30,7 @@ class Graphics
 {
 	public:
 		Graphics(const int, const int);
-		void drawToScreen(Paddle *, Paddle *, Ball *, std::string, std::string);
+		void drawToScreen(Paddle *, Paddle *, Ball *, unsigned int, unsigned int);
 		SDL_Window *getWindowScreen();
 
 	private:
