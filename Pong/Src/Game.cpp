@@ -1,6 +1,12 @@
 #include "Game.h"
+#include <SDL.h>
 #include <SDL_ttf.h>
-#include <string>
+#include "Ball.h"
+#include "Paddle.h"
+#include "Graphics.h"
+#include "Input.h"
+#include "Sound.h"
+#include "Timer.h"
 
 Game::Game()
 {
@@ -19,7 +25,7 @@ void Game::playGame()
 
 	playerPaddle = (std::make_unique<Paddle>(20.0f, currentDisplaySize.h / 2.0f - 50.0f, 10, 100));
 	AIPaddle = (std::make_unique<Paddle>(currentDisplaySize.w - 30.0f, currentDisplaySize.h / 2.0f - 50.0f, 10, 100));
-	ball = ((std::make_unique<Ball>(currentDisplaySize.w / 2.0f, currentDisplaySize.h / 2.0f, 13.0f)));
+	ball = (std::make_unique<Ball>(currentDisplaySize.w / 2.0f, currentDisplaySize.h / 2.0f, 13.0f));
 
 	Graphics graphics(currentDisplaySize.w, currentDisplaySize.h);
 	Input input;
@@ -86,26 +92,34 @@ void Game::updateObjects(Graphics &graphics, Sound &sound, Input input, Timer ti
 {
 	float timeStep = timer.getTicks();
 
+	if (ball->getVelocityX() > 0.0f)
+	{
+		AIPaddle->AIMove(ball.get(), timeStep, graphics.SCREEN_HEIGHT - 10); // SCREEN_HEIGHT - Height of the bottom rectangle.
+	} 
+
+	float playerPaddleNewYPos = playerPaddle->Y_VELOCITY * timeStep;
+
 	if(input.isPaddleMovingUp())
 	{
-		playerPaddle->moveUp(timeStep);
+		playerPaddle->moveUp(playerPaddleNewYPos);
 	}
 	else if(input.isPaddleMovingDown())
 	{
-		playerPaddle->moveDown(timeStep, graphics.SCREEN_HEIGHT - 10); // SCREEN_HEIGHT - Height of the bottom rectangle.
+		playerPaddle->moveDown(playerPaddleNewYPos, graphics.SCREEN_HEIGHT - 10);
 	}
 
-	ball->move(timeStep);
+	float ballNewXPos = ball->getVelocityX() * timeStep;
+	float ballNewYPos = ball->getVelocityY() * timeStep;
+	ball->move(ballNewXPos, ballNewYPos);
+
 	ball->checkForCollision(timeStep, playerPaddle.get(), AIPaddle.get(), sound, graphics.SCREEN_WIDTH, graphics.SCREEN_HEIGHT - 10);
+
 	ball->updateScore(&playerScore, &AIScore, sound, graphics.SCREEN_WIDTH, graphics.SCREEN_HEIGHT);
 }
 
 void Game::renderObjects(Graphics &graphics)
 {
-	std::string playerScoreStr = std::to_string(playerScore);
-	std::string AIScoreStr = std::to_string(AIScore);
-
-	graphics.drawToScreen(playerPaddle.get(), AIPaddle.get(), ball.get(), playerScoreStr, AIScoreStr);
+	graphics.drawToScreen(playerPaddle.get(), AIPaddle.get(), ball.get(), playerScore, AIScore);
 }
 
 void Game::quitGame()
