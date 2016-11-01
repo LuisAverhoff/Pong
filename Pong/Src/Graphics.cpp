@@ -1,6 +1,9 @@
 #include "Graphics.h"
+#include "Paddle.h"
+#include "Ball.h"
 #include <SDL2_gfxPrimitives.h>
 #include <SDL_ttf.h>
+#include <string>
 
 Graphics::Graphics(const int WIDTH, const int HEIGHT) : SCREEN_WIDTH(WIDTH), SCREEN_HEIGHT(HEIGHT)
 {
@@ -33,14 +36,15 @@ SDL_Window *Graphics::getWindowScreen()
 	return window.get();
 }
 
-void Graphics::drawToScreen(SDL_Rect *playerRect, SDL_Rect *AIRect, Sint16 ballCenterX, Sint16 ballCenterY, 
-								  Sint16 ballRadius, std::string playerScoreText, std::string AIScoreText)
+void Graphics::drawToScreen(Paddle *playerPaddle, Paddle *AIPaddle, Ball *ball, unsigned int playerScore, unsigned int AIScore)
 {
 	SDL_SetRenderDrawColor(renderer.get(), 0, 0, 0, 255);
 	SDL_RenderClear(renderer.get());
 	SDL_SetRenderDrawColor(renderer.get(), 255, 255, 255, 255);
 	drawHorizontalBoxes();
 	drawVerticalLine();
+	std::string playerScoreText = std::to_string(playerScore);
+	std::string AIScoreText = std::to_string(AIScore);
 	drawScore(playerScoreText.c_str(), AIScoreText.c_str());
 	Sint16 playPaddleXPos1 = (Sint16)playerPaddle->PADDLE_X_POSITION;
 	Sint16 playPaddleXPos2 = playPaddleXPos1 + playerPaddle->PADDLE_WIDTH;
@@ -72,8 +76,12 @@ void Graphics::drawScore(const char *playerScoreText, const char *AIScoreText)
 	playerTextSurface = nullptr;
 	AiTextSurface = nullptr;
 
+	int playerTextWidth;
+
+	TTF_SizeText(pixelFont, playerScoreText, &playerTextWidth, NULL);
+
 	SDL_Rect playerTextRect;
-	playerTextRect.x = (SCREEN_WIDTH / 2) - 52, playerTextRect.y = 20;
+	playerTextRect.x = (SCREEN_WIDTH / 2) - playerTextWidth - 5, playerTextRect.y = 20;
 	SDL_QueryTexture(playerScoreTexture.get(), NULL, NULL, &playerTextRect.w, &playerTextRect.h);
 
 	SDL_Rect AiTextRect;
