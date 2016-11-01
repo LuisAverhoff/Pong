@@ -1,13 +1,16 @@
 #ifndef PADDLE_H
 #define PADDLE_H
 
+class Ball;
+
 class Paddle
 {
 	public:
 		Paddle(const float, float, const int, const int);
+		float getYPosition() const;
 		void moveUp(float);
 		void moveDown(float, const int);
-		float getYPosition() const;
+		void AIMove(Ball *, float, const int);
 
 	private:
 		float paddleYPosition;
@@ -19,4 +22,4 @@ class Paddle
 		const float Y_VELOCITY = 640.0f;
 };
 
-#endif
+#en
