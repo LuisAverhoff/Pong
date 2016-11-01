@@ -1,11 +1,13 @@
 #include "Ball.h"
+#include "Paddle.h"
+#include "Sound.h"
 #include <random>
 #include <cmath>
 
-namespace randNumGenerator
+namespace ballRandomNumGenerator
 {
 	std::random_device randDevice;
-	std::mt19937 mt(randDevice());
+	std::default_random_engine randomGenerator(randDevice());
 }
 
 static float degree2Rad(float);
@@ -13,8 +15,8 @@ static float clamp(float, float, float);
 static int sgn(float val);
 
 constexpr float PI_F = 3.14159265358979f;
-constexpr float MAX_BOUNCE_ANGLE = 5 * PI_F / 12;
-constexpr float SPEED_UP_FACTOR = 1.05f;
+constexpr float MAX_BOUNCE_ANGLE = PI_F / 4;
+constexpr float SPEED_UP_FACTOR = 1.1f;
 
 Ball::Ball(float xCoord, float yCoord, const float RAD) : centerX(xCoord), centerY(yCoord), RADIUS(RAD)
 {
@@ -28,11 +30,11 @@ Ball::Ball(float xCoord, float yCoord, const float RAD) : centerX(xCoord), cente
 void Ball::launchBall()
 {
 	std::uniform_int_distribution<int> dir(0, 1);
-	int dirPivot = dir(randNumGenerator::mt);
+	int dirPivot = dir(ballRandomNumGenerator::randomGenerator);
 	int direction = (dirPivot == 0 ? -1 : 1);
 
 	std::uniform_real_distribution<float> degree(-60, 60);
-	angle = degree(randNumGenerator::mt);
+	angle = degree(ballRandomNumGenerator::randomGenerator);
 
 	xVelocity = direction * speed * cos(degree2Rad(angle));
 	yVelocity = speed * sin(degree2Rad(angle));
@@ -45,10 +47,10 @@ bool Ball::isBallLaunched()
 	return ballLaunched;
 }
 
-void Ball::move(float timeStep)
+void Ball::move(float newXPosition, float newYPosition)
 {
-	centerX += (xVelocity * timeStep);
-	centerY += (yVelocity * timeStep);
+	centerX += newXPosition;
+	centerY += newYPosition;
 }
 
 void Ball::checkForCollision(float timeStep, Paddle *playerPaddle, Paddle *AIPaddle, Sound &sound, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
@@ -58,7 +60,9 @@ void Ball::checkForCollision(float timeStep, Paddle *playerPaddle, Paddle *AIPad
 		if (ballPaddleCollision(playerPaddle))
 		{
 			deflectBall(playerPaddle);
-			move(timeStep); // Move early. Do not wait for the next frame to move.
+			float newXPosition = xVelocity * timeStep;
+			float newYPosition = yVelocity * timeStep;
+			move(newXPosition, newYPosition); // Move early. Do not wait for the next frame to move.
 			sound.playSoundEffect(1);
 		}
 	}
@@ -67,14 +71,16 @@ void Ball::checkForCollision(float timeStep, Paddle *playerPaddle, Paddle *AIPad
 		if (ballPaddleCollision(AIPaddle))
 		{
 			deflectBall(AIPaddle);
-			move(timeStep);
+			float newXPosition = xVelocity * timeStep;
+			float newYPosition = yVelocity * timeStep;
+			move(newXPosition, newYPosition); 
 			sound.playSoundEffect(1);
 		}
 	}
 
 	if (ballWallCollision(SCREEN_HEIGHT))
 	{
-		yVelocity *= -1.0f; // reverse the direction
+		yVelocity *= -1.0f; // reverse in the y-axis.
 		centerY += (yVelocity * timeStep); // quickly update the position. Do not wait for the next frame to move
 		sound.playSoundEffect(2);
 	}
@@ -136,6 +142,16 @@ float Ball::getCenterX() const
 float Ball::getCenterY() const
 {
 	return centerY;
+}
+
+float Ball::getVelocityX() const
+{
+	return xVelocity;
+}
+
+float Ball::getVelocityY() const
+{
+	return yVelocity;
 }
 
 static float degree2Rad(float degrees)
